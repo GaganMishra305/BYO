@@ -16,7 +16,9 @@
 
 ## 3. Usage:
 ```bash
-make        # builds and runs the target code for the given "./tests/book.txt"
-make test   # runs the unit tests
-make clean  # cleans the binaries
+make                                            # builds and runs the target code for the given "./tests/book.txt"
+./build/huffman <file.txt>                      # runs the target on custom .txt file
+
+make test                                       # runs the unit tests
+make clean                                      # cleans the binaries
 ```
