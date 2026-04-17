@@ -3,17 +3,18 @@ using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    if(argc < 2) {
-        cout << "Usage: ccwc <one flag> <filename.txt>\n";
-        return 1;
-    }
-
     // file-opener
     string fname = argv[argc - 1];
     ifstream f(fname);
-    if(!f.is_open()) {
-        cout << "Failed to open file\n";
-        return 1;
+    istream* in = &cin;
+    if(fname[0] != '-') { // assumption: filename does not begin with '-'
+        if(!f.is_open()) {
+            cout << "Failed to open file\n";
+            return 1;
+        }
+        in = &f;
+    } else {
+        fname = "";
     }
 
     // core
@@ -23,7 +24,7 @@ int main(int argc, char* argv[]) {
     int wcc = 0;
     string word = "";
     bool inWord = false;
-    while(f.get(ch)) {
+    while(in -> get(ch)) {
         if(ch == '\n')lcc++;
         if (isspace(static_cast<unsigned char>(ch))) {
             inWord = false;
