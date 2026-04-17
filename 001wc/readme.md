@@ -1,0 +1,4 @@
+# wc
+Simple word counter.
+
+
