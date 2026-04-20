@@ -1,8 +1,7 @@
 import os
 import subprocess
 
-def test_step1():
-    DIR = "./tests/step1/"
+def test_step(DIR: str):
     for f in os.listdir(DIR):
         file_path = os.path.join(DIR, f)
 
@@ -13,10 +12,18 @@ def test_step1():
             text=True
         )
         
-        print(f"Testing: {f}")
-        if f.startswith('i'):
-            assert result.returncode != 0, f"File {f} should have failed"
-        else:
-            assert result.returncode == 0, f"File {f} should have passed"
+        print(f"Testing: {f}", end = " ")
+        try:
+            if f.startswith('i'):
+                assert result.returncode != 0, f"File {f} should have failed"
+            else:
+                assert result.returncode == 0, f"File {f} should have passed"
+            print("PASSED")
+        except AssertionError as e:
+            print("FAILED")
+            print("="*10, e, "="*10)
+        
 
-test_step1()
+
+test_step("./tests/step1/")
+test_step("./tests/step2/")
