@@ -21,7 +21,7 @@ def test_step(DIR: str):
             print("PASSED")
         except AssertionError as e:
             print("FAILED")
-            print("="*10, e, "="*10)
+            print("="*20, e, "="*20)
         
 
 
