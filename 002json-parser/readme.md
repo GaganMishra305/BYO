@@ -1,2 +1,4 @@
 # JSON-parser
-Parsing is a fundamental and cool aspect of coding.
+Normal JSON-parser that intakes a json and digests it.
+
+    
