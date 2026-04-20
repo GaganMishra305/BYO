@@ -6,10 +6,11 @@ class Lexer:
 
 # state machine over tokens = Parser
 class ParserState:
-    START = 0
-    KEY   = 1
-    VALUE = 2
-    EXIT  = 3
+    START     = 0
+    KEY_FIRST = 1  # first value
+    KEY_NEXT  = 2  # value after ,
+    VALUE     = 3
+    EXIT      = 4
 
 class Parser:
     def __init__(self, content):
@@ -24,17 +25,24 @@ class Parser:
             match self.current:
                 case ParserState.START:
                     if ch == "{":
-                        self.current = ParserState.KEY
+                        self.current = ParserState.KEY_FIRST
                     else:
                         sys.exit(1)
 
-                case ParserState.KEY:
+                case ParserState.KEY_FIRST:
                     if ch == "\"":
                         key = self.get_key()
                         self.current = ParserState.VALUE
-                    elif ch == "}" and not self.after_comma:
+                    elif ch == "}":        # empty object valid here
                         sys.exit(0)
                     else:
+                        sys.exit(1)
+
+                case ParserState.KEY_NEXT:
+                    if ch == "\"":
+                        key = self.get_key()
+                        self.current = ParserState.VALUE
+                    else:                  # empty object invalid after ,
                         sys.exit(1)
 
                 case ParserState.VALUE:
@@ -42,8 +50,7 @@ class Parser:
                         value = self.get_value()
                         ch = self.get_next()
                         if ch == ",":
-                            self.after_comma = True
-                            self.current = ParserState.KEY
+                            self.current = ParserState.KEY_NEXT
                         elif ch == "}":
                             sys.exit(0)
                         else:
