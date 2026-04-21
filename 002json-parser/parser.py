@@ -7,8 +7,7 @@ class Lexer:
 # state machine over tokens = Parser
 class ParserState:
     START     = 0
-    KEY_FIRST = 1  # first value
-    KEY_NEXT  = 2  # value after ,
+    KEY       = 1 
     VALUE     = 3
     EXIT      = 4
 
@@ -25,24 +24,21 @@ class Parser:
             match self.current:
                 case ParserState.START:
                     if ch == "{":
-                        self.current = ParserState.KEY_FIRST
+                        self.current = ParserState.KEY
+                        ch = self.get_next()
+                        if ch == "}":
+                            self.current = ParserState.EXIT
+                        else:
+                            self.idx -= 1
+                            self.current = ParserState.KEY
                     else:
                         sys.exit(1)
 
-                case ParserState.KEY_FIRST:
+                case ParserState.KEY:
                     if ch == "\"":
                         key = self.get_key()
                         self.current = ParserState.VALUE
-                    elif ch == "}":        # empty object valid here
-                        sys.exit(0)
                     else:
-                        sys.exit(1)
-
-                case ParserState.KEY_NEXT:
-                    if ch == "\"":
-                        key = self.get_key()
-                        self.current = ParserState.VALUE
-                    else:                  # empty object invalid after ,
                         sys.exit(1)
 
                 case ParserState.VALUE:
@@ -50,13 +46,14 @@ class Parser:
                         value = self.get_value()
                         ch = self.get_next()
                         if ch == ",":
-                            self.current = ParserState.KEY_NEXT
+                            self.current = ParserState.KEY
                         elif ch == "}":
-                            sys.exit(0)
+                            self.current = ParserState.EXIT
                         else:
                             sys.exit(1)
                     else:
                         sys.exit(1)
+        sys.exit(0) # if you escape the parsing while then yes you are the DRAGON WARRIOR, i mean, a valid parsed-json
 
     def get_next(self):
         ch = self.content[self.idx]
