@@ -15,9 +15,9 @@ def test_step(DIR: str):
         print(f"Testing: {f}", end = " ")
         try:
             if f.startswith('i'):
-                assert result.returncode != 0, f"File {f} should have failed"
+                assert result.returncode != 0, f"File-path {DIR + f} should have failed"
             else:
-                assert result.returncode == 0, f"File {f} should have passed"
+                assert result.returncode == 0, f"File-path {DIR + f} should have passed"
             print("PASSED")
         except AssertionError as e:
             print("FAILED")
@@ -27,3 +27,4 @@ def test_step(DIR: str):
 
 test_step("./tests/step1/")
 test_step("./tests/step2/")
+test_step("./tests/step3/")

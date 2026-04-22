@@ -75,12 +75,39 @@ class Parser:
     def get_value(self):
         value = ""
         ch = self.get_next()
-        if ch != "\"":
-            sys.exit(1)
-        ch = self.get_next()
-        while ch != "\"":
-            value += ch
+        if ch == "\"":
             ch = self.get_next()
+            while ch != "\"":
+                value += ch
+                ch = self.get_next()
+        elif ch == "t":
+            for _ in range(4):
+                value += ch
+                ch = self.get_next()
+            self.idx -= 1
+            if value != "true":
+                sys.exit(1)
+        elif ch == "f":
+            for _ in range(5):
+                value += ch
+                ch = self.get_next()
+            self.idx -= 1
+            if value != "false":
+                sys.exit(1)
+        elif ch == "n":
+            for _ in range(4):
+                value += ch
+                ch = self.get_next()
+            self.idx -= 1
+            if value != "null":
+                sys.exit(1)
+        elif ch.isdigit():
+            while ch.isdigit():
+                value += ch
+                ch = self.get_next()
+            self.idx -= 1
+        else:
+            sys.exit(1)
         return value
 
 
