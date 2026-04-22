@@ -24,7 +24,6 @@ class Parser:
             match self.current:
                 case ParserState.START:
                     if ch == "{":
-                        self.current = ParserState.KEY
                         ch = self.get_next()
                         if ch == "}":
                             self.current = ParserState.EXIT
