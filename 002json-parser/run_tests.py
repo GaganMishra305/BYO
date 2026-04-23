@@ -22,9 +22,9 @@ def test_step(DIR: str):
         except AssertionError as e:
             print("FAILED")
             print("="*20, e, "="*20)
-        
-
 
 test_step("./tests/step1/")
 test_step("./tests/step2/")
 test_step("./tests/step3/")
+test_step("./tests/step4/")
+test_step("./tests/step5/")

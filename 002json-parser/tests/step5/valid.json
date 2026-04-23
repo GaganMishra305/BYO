@@ -1,0 +1,14 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "age": 30,
+  "isEmployee": true,
+  "address": {
+    "street": "123 Main St",
+    "city": "New York"
+  },
+  "phoneNumbers": [
+    "555-1234",
+    "555-5678"
+  ]
+}

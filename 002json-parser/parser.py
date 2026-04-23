@@ -16,9 +16,9 @@ class Parser:
         self.idx          = 0
         self.current      = ParserState.START
         self.content      = content
-        self.after_comma  = False
 
     def parse(self):
+        result = {}
         while self.current != ParserState.EXIT:
             ch = self.get_next()
             match self.current:
@@ -43,6 +43,7 @@ class Parser:
                 case ParserState.VALUE:
                     if ch == ":":
                         value = self.get_value()
+                        result[key] = value
                         ch = self.get_next()
                         if ch == ",":
                             self.current = ParserState.KEY
@@ -52,7 +53,7 @@ class Parser:
                             sys.exit(1)
                     else:
                         sys.exit(1)
-        sys.exit(0) # if you escape the parsing while then yes you are the DRAGON WARRIOR, i mean, a valid parsed-json
+        return result
 
     def get_next(self):
         ch = self.content[self.idx]
@@ -106,6 +107,31 @@ class Parser:
                 value += ch
                 ch = self.get_next()
             self.idx -= 1
+        elif ch == "[":             # string-array
+            arr_cont = ""
+            ch = self.get_next()
+            while ch != "]":
+                arr_cont += ch
+                ch = self.get_next()
+            arr_elems = arr_cont.split(",")
+            value = []
+            for lv in arr_elems:
+                if lv == '':
+                    continue
+                elif not(lv.startswith("\"") and lv.endswith("\"")):
+                    print("wrong value formatting within array")
+                    sys.exit(1)
+                else:
+                    value.insert(0, lv[1:-1])
+        elif ch == "{":             # js-object check
+            self.idx -= 1
+            saved_state = self.current
+            self.current = ParserState.START
+            nested = self.parse()
+
+            # restore the previous state
+            self.current = saved_state
+            return nested
         else:
             sys.exit(1)
         return value
@@ -118,4 +144,4 @@ with open(file, 'r') as file:
 
 # opening parser
 p = Parser(content)
-p.parse()
+print(p.parse())
