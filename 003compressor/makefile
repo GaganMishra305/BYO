@@ -7,4 +7,4 @@ test:
 	./build/huffman_test
 
 clean:
-	rm -rf build
+	rm  build/*
