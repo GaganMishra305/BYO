@@ -12,5 +12,6 @@
 - ENCODE: a = 00, b = 10, c = 01
 - 000000101001 -> 12bits -> 1.5bytes
 - DECODE: get the value back
+- CORE: use smaller codes for more frequent characters
 
 ## 3. Usage:
