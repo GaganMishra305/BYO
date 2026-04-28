@@ -15,3 +15,8 @@
 - CORE: use smaller codes for more frequent characters
 
 ## 3. Usage:
+```bash
+make        # builds and runs the target code for the given "./tests/book.txt"
+make test   # runs the unit tests
+make clean  # cleans the binaries
+```
