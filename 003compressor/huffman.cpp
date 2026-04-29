@@ -43,16 +43,13 @@ int main(int argc, char* argv[]) {
         cout << "Usage: ./huffman <filename.txt>" << endl;
         return 1;
     }
-
     string fname = argv[1];
     ifstream f(fname);
     if(!f.is_open()) {
         cout << "Failed to open file" << endl;
         return 1;
     }
-
     cout << format_frequency_table(build_frequency_table(f));
-
     return 0;
 }
 #endif
