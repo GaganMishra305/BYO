@@ -8,11 +8,12 @@
 3. size:  l1  <  l2  <  l3
 
 ## 2. Compressing strategy: (generic idea)
-- aaabbc  ->  6bytes
-- ENCODE: a = 00, b = 10, c = 01
-- 000000101001 -> 12bits -> 1.5bytes
-- DECODE: get the value back
-- CORE: use smaller codes for more frequent characters
+- STEPS
+    1. aaabbc  ->  6bytes
+    2. ENCODE: a = 00, b = 10, c = 01
+    3. 000000101001 -> 12bits -> 1.5bytes
+    4. DECODE: get the value back
+- CORE-IDEA: use smaller codes for more frequent characters
 
 ## 3. Usage:
 ```bash
