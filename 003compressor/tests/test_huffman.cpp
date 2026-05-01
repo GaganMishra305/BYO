@@ -33,5 +33,11 @@ int main() {
         }
     };
     assert(sumLeafWeights(tree->root) == total);
+
+    // --- test build_prefix_table ---
+    map<char, string> codes = build_prefix_table(tree);
+    assert(codes['a'] == "0");
+    assert(codes['b'] == "11");
+    assert(codes['c'] == "10");
     return 0;
 }

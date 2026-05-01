@@ -20,6 +20,24 @@ HuffTree* build_tree(const map<char, int> &freq) {
     return pq.top();
 }
 
+map<char, string> build_prefix_table(HuffTree *t) {
+    // using simple dfs-strategy for prefix-map generation by traversing the hufftree
+    map<char, string> code;
+    queue<Node*> q;
+    q.push(t->root);
+
+    function<void(Node*, string)> dfs = [&] (Node* root, string path) {
+        if(root->is_leaf()) {
+            code[root->element] = path;
+        } else {
+            dfs(root->left,     path + "0");
+            dfs(root->right, path + "1");
+        }
+    };
+    dfs(t->root, "");
+    return code;
+}
+
 map<char, int> build_frequency_table(istream& input) {
     map<char, int> freq;
     char ch;
@@ -39,17 +57,32 @@ string format_frequency_table(const map<char, int>& freq) {
 
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
+    // reading input file
     if(argc != 2) {
         cout << "Usage: ./huffman <filename.txt>" << endl;
         return 1;
     }
     string fname = argv[1];
     ifstream f(fname);
-    if(!f.is_open()) {
+    if(fname.substr(fname.rfind(".")) != ".txt") {
+        cout << "Expected a .txt file" << endl;
+        return 1;
+    } else if(!f.is_open()) {
         cout << "Failed to open file" << endl;
         return 1;
     }
-    cout << format_frequency_table(build_frequency_table(f));
+
+    // generating output filename.huff
+    string oname = fname.substr(0, fname.rfind(".")) + ".huff";
+    ofstream outfile(oname);
+    if(outfile.is_open()) {
+        outfile << format_frequency_table(build_frequency_table(f));
+        cout << "===HEADER ENDS===" << endl;
+    } else {
+        cout << "Unable to create output file" << endl;
+        return 1;
+    }
+    cout << "Compressed file stored at " + oname << endl;
     return 0;
 }
 #endif
