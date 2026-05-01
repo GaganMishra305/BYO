@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     ofstream outfile(oname);
     if(outfile.is_open()) {
         outfile << format_frequency_table(build_frequency_table(f));
-        cout << "===HEADER ENDS===" << endl;
+        outfile << "===HEADER ENDS===" << endl;
     } else {
         cout << "Unable to create output file" << endl;
         return 1;
