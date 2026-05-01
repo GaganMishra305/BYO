@@ -3,31 +3,31 @@ using namespace std;
 
 struct Node {
     int weight = 0;
-    virtual bool is_leaf();
+    char element;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    virtual  bool is_leaf() {
+        return false;
+    }
 };
 
-inline bool Node::is_leaf() { return false; }
-
 struct LeafNode : public Node {
-    char element;
     LeafNode(char el, int wt) {
         element = el;
         weight = wt;
     }
-    bool is_leaf() {
+    bool is_leaf() override {
         return true;
     }
 };
 
 struct InternalNode : public Node {
-    Node* left;
-    Node* right;
     InternalNode(Node* l, Node* r, int wt) {
         left = l;
         right = r;
         weight = wt;
     }
-    bool is_leaf() {
+    bool is_leaf() override {
         return false;
     }
 };
