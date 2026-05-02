@@ -13,7 +13,7 @@ int main() {
     assert(freq['a'] == 3);
     assert(freq['b'] == 2);
     assert(freq['c'] == 1);
-    assert(format_frequency_table(freq) == "a : 3\nb : 2\nc : 1\n");
+    assert(format_table(freq) == "a : 3\nb : 2\nc : 1\n");
     
     // --- test build_tree (hufftree_build) ---
     std::map<char,int> freq2{{'a',3},{'b',2},{'c',1}};

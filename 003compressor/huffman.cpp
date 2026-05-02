@@ -47,10 +47,11 @@ map<char, int> build_frequency_table(istream& input) {
     return freq;
 }
 
-string format_frequency_table(const map<char, int>& freq) {
+template<typename K, typename V>
+string format_table(const map<K, V>& table) {
     ostringstream output;
-    for(const auto& [ch, count] : freq) {
-        output << ch << " : " << count << '\n';
+    for (const auto& [k, v] : table) {
+        output << k << " : " << v << '\n';
     }
     return output.str();
 }
@@ -76,8 +77,12 @@ int main(int argc, char* argv[]) {
     string oname = fname.substr(0, fname.rfind(".")) + ".huff";
     ofstream outfile(oname);
     if(outfile.is_open()) {
-        outfile << format_frequency_table(build_frequency_table(f));
+        map<char, int> ft = build_frequency_table(f);
+        outfile << format_table(ft);
         outfile << "===HEADER ENDS===" << endl;
+        outfile << format_table(build_prefix_table(build_tree(ft)));
+        outfile << "===PREFIX TABLE ENDS===" << endl;
+
     } else {
         cout << "Unable to create output file" << endl;
         return 1;
