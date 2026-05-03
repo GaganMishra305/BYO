@@ -2,6 +2,8 @@
 #include "hufftree.cpp"
 using namespace std;
 
+const int BITS = 8; // bits that are compressed together
+
 HuffTree* build_tree(const map<char, int> &freq) {
     // min-heap of HuffTree* by root weight
     auto cmp = [](HuffTree* a, HuffTree* b){ return a->root->weight > b->root->weight; };
@@ -56,6 +58,33 @@ string format_table(const map<K, V>& table) {
     return output.str();
 }
 
+void encoder(int bit, map<char, string> &codes, ifstream &inp, ofstream &out) {
+    inp.clear();              
+    inp.seekg(0, std::ios::beg); 
+    string buff = "";
+    char ch;
+    while(inp.get(ch)) {
+        buff += codes[ch];
+        while(buff.size() >= bit) {
+            string bit_string = buff.substr(0, bit);
+            buff = buff.substr(bit);
+            char byte = static_cast<char>(std::stoi(bit_string, nullptr, 2));
+            out << byte;
+        }
+    } 
+    
+    // flush remaining bits
+    if(!buff.empty()) {
+        buff.append(bit - buff.size(), '0');
+        char byte = static_cast<char>(stoi(buff, nullptr, 2));
+        out.put(byte);
+    }
+}
+
+void decoder(ifstream &cfile, ofstream &dfile) {
+    dfile << "decompressed file wud be here" << endl;
+}
+
 #ifndef UNIT_TEST
 int main(int argc, char* argv[]) {
     // reading input file
@@ -64,8 +93,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     string fname = argv[1];
+    string name  = fname.substr(0, fname.rfind("."));
+    string fext  = fname.substr(fname.rfind("."));
     ifstream f(fname);
-    if(fname.substr(fname.rfind(".")) != ".txt") {
+
+    // execution parsing based on file type passed
+    if(fext == ".huff") {
+        string dname = name+"_D" + ".txt";
+        cout << "Decompressed file is stored at " << dname << endl;
+        ifstream cfile(fname);
+        ofstream dfile(dname);
+        decoder(cfile, dfile);
+        return 0;
+    } else if(fext != ".txt") {
         cout << "Expected a .txt file" << endl;
         return 1;
     } else if(!f.is_open()) {
@@ -74,15 +114,14 @@ int main(int argc, char* argv[]) {
     }
 
     // generating output filename.huff
-    string oname = fname.substr(0, fname.rfind(".")) + ".huff";
+    string oname = name + ".huff";
     ofstream outfile(oname);
     if(outfile.is_open()) {
         map<char, int> ft = build_frequency_table(f);
         outfile << format_table(ft);
         outfile << "===HEADER ENDS===" << endl;
-        outfile << format_table(build_prefix_table(build_tree(ft)));
-        outfile << "===PREFIX TABLE ENDS===" << endl;
-
+        map<char, string> codes = build_prefix_table(build_tree(ft));
+        encoder(BITS, codes, f, outfile); // number of bits that collapse to make one compressed character {8, 16}
     } else {
         cout << "Unable to create output file" << endl;
         return 1;

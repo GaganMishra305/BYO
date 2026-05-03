@@ -18,8 +18,14 @@
 ## 3. Usage:
 ```bash
 make                                            # builds and runs the target code for the given "./tests/book.txt"
-./build/huffman <file.txt>                      # runs the target on custom .txt file
+./build/huffman <file.txt>                      # compresses a custom .txt file and produces a .huff file
+./build/huffman <file.huff>                     # decompresses the provided .huff file and produces a .txt file
 
 make test                                       # runs the unit tests
 make clean                                      # cleans the binaries
 ```
+
+## 4. Stats
+- Compressed .txt files by 41.5% using  8-bit compression
+- Compressed .txt files by 70.4% using 16-bits compression
+- Above stats no ./test/book.txt file
