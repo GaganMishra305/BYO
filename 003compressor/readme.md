@@ -28,4 +28,4 @@ make clean                                      # cleans the binaries
 ## 4. Stats
 - Compressed .txt files by 41.5% using  8-bit compression
 - Compressed .txt files by 70.4% using 16-bits compression
-- Above stats no ./test/book.txt file
+- Above stats are of the ./test/book.txt file
