@@ -53,7 +53,7 @@ template<typename K, typename V>
 string format_table(const map<K, V>& table) {
     ostringstream output;
     for (const auto& [k, v] : table) {
-        output << k << " : " << v << '\n';
+        output << static_cast<int>(k) << " : " << v << '\n';
     }
     return output.str();
 }
@@ -82,7 +82,43 @@ void encoder(int bit, map<char, string> &codes, ifstream &inp, ofstream &out) {
 }
 
 void decoder(ifstream &cfile, ofstream &dfile) {
-    dfile << "decompressed file wud be here" << endl;
+    // frequency parsing
+    map<char, int> freq;
+    string line;
+    while(getline(cfile, line)) {
+        if(line == "===HEADER ENDS===") {
+            break;
+        }
+        size_t colonPos = line.find(':');
+        if(colonPos != string::npos && line.length() > 0) {
+            int ascii_code = stoi(line.substr(0, colonPos));
+            int count = stoi(line.substr(colonPos + 1));
+            freq[static_cast<char>(ascii_code)] = count;
+        }
+    }
+    
+    // tree-building
+    HuffTree* tree = build_tree(freq);
+    if(!tree) return;
+
+    // decoding
+    Node* current = tree->root;
+    char byte;
+    while(cfile.get(byte)) {
+        unsigned char ubyte = static_cast<unsigned char>(byte);
+        for(int i = 7; i >= 0; i--) {
+            int bit = (ubyte >> i) & 1;
+            if(bit == 0) {
+                current = current->left;
+            } else {
+                current = current->right;
+            }
+            if(current->is_leaf()) {
+                dfile << current->element;
+                current = tree->root;
+            }
+        }
+    }
 }
 
 #ifndef UNIT_TEST
