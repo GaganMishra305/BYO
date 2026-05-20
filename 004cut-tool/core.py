@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
 import sys
 
-def cut(filename, field, deli):
+def cut(filename, fields, deli):
     with open(filename) as f:
         for line in f:
             parts = line.rstrip('\n').split(deli)
-            idx = field - 1
-            print(parts[idx] if idx < len(parts) else '')
+            selected_parts = []
+            for field in fields:
+                idx = field - 1
+                if idx < len(parts):
+                    selected_parts.append(parts[idx])
+            print(deli.join(selected_parts))
 
 if __name__ == '__main__':
-    field = 1
+    fields = [1]
     files = []
     deli = "\t"
     for arg in sys.argv[1:]:
         if arg.startswith('-f'):
-            field = int(arg[2:])
+            fields_str = arg[2:]
+            fields = [int(f) for f in fields_str.split(',')]
         elif arg.startswith("-d"):
             deli = arg[2:]
         else:
             files.append(arg)
     
     for f in files:
-        cut(f, field, deli)
+        cut(f, fields, deli)
