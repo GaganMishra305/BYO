@@ -19,7 +19,10 @@ if __name__ == '__main__':
     for arg in sys.argv[1:]:
         if arg.startswith('-f'):
             fields_str = arg[2:]
-            fields = [int(f) for f in fields_str.split(',')]
+            if fields_str.count(","):
+                fields = [int(f) for f in fields_str.split(',')]
+            elif fields_str.count(" "):
+                fields = [int(f) for f in fields_str.split(' ')]
         elif arg.startswith("-d"):
             deli = arg[2:]
         else:
