@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 import sys
 
+def process_stream(stream, fields, deli):
+    for line in stream:
+        parts = line.rstrip('\n').split(deli)
+        selected_parts = []
+        for field in fields:
+            idx = field - 1
+            if idx < len(parts):
+                selected_parts.append(parts[idx])
+        print(deli.join(selected_parts))
+
 def cut(filename, fields, deli):
     with open(filename) as f:
-        for line in f:
-            parts = line.rstrip('\n').split(deli)
-            selected_parts = []
-            for field in fields:
-                idx = field - 1
-                if idx < len(parts):
-                    selected_parts.append(parts[idx])
-            print(deli.join(selected_parts))
+        process_stream(f, fields, deli)
 
 if __name__ == '__main__':
     fields = [1]
@@ -28,5 +31,11 @@ if __name__ == '__main__':
         else:
             files.append(arg)
     
-    for f in files:
-        cut(f, fields, deli)
+    if not files or files == ['-']:
+        process_stream(sys.stdin, fields, deli)
+    else:
+        for f in files:
+            if f == "-":
+                process_stream(sys.stdin, fields, deli)
+            else:
+                cut(f, fields, deli)
