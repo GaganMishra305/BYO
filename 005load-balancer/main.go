@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	backendURL, err := url.Parse("http://localhost:8081")
+	backendURL, err := url.Parse("http://localhost:10000")
 	if err != nil {
 		log.Fatalf("Failed to parse backend URL: %v", err)
 	}
